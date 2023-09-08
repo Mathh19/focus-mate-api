@@ -7,9 +7,9 @@ export const MongoClient = {
     const url = process.env.MONGODB_URL || '';
 
     const client = new Mongo(url);
-    const db = client.db('users-db');
+    const db = client.db('focus-mate');
 
-    this.client =  client;
+    this.client = client;
     this.db = db;
   }
 }
