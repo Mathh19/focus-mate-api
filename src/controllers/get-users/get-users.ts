@@ -2,7 +2,7 @@ import { IGetUsersController, IGetUsersRepository } from "./protocols";
 
 export class GetUsersController implements IGetUsersController {
 
-  constructor(private readonly getUsersRepository: IGetUsersRepository) {}
+  constructor(private readonly getUsersRepository: IGetUsersRepository) { }
 
   async handle() {
     try {
