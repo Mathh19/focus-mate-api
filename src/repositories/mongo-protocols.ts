@@ -1,3 +1,3 @@
-import { User } from "../models/user";
+import { Task } from "models/task";
 
-export type MongoUser = Omit<User, 'id'>;
+export type MongoTask = Omit<Task, 'id'>;
