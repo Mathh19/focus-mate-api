@@ -6,7 +6,7 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import router from './router';
-import { connectToDB } from './connectToDb'
+import { connectToDB } from './database/connectToDb'
 
 config();
 const app = express();
