@@ -1,10 +1,20 @@
 {
   "compilerOptions": {
-    "module": "NodeNext",
-    "baseUrl": "src",
-    "outDir": "dist",
-    "sourceMap": true,
-    "noImplicitAny": true                              /* Skip type checking all .d.ts files. */
-  },
-  "include": ["src/**/*"],
+		"target": "es2018",
+		"lib": ["es5", "es6", "ES2018"],
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"allowJs": true,
+		"outDir": "./dist",
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": true,
+		"noImplicitAny": true,
+		"strictPropertyInitialization": false,
+		"typeRoots": ["./src/@types"]
+	},
+  "include": ["src/**/*"]
 }
