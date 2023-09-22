@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import { getUserByEmail } from "./users/get-users";
-import { createUser } from "../repositories/userRepository";
+import { createUser, getUserByEmail } from "../repositories/userRepository";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
@@ -45,7 +44,7 @@ export class UserController {
         return res.status(400).send('Field is required!');
       }
 
-      const user = await getUserByEmail(email).select('+password');
+      const user = await getUserByEmail(email);
 
       if (!user) {
         return res.status(400).send('User does not exist.');
