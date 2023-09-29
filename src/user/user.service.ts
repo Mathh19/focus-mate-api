@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { User } from 'src/user/user.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { BadRequestException } from '@nestjs/common';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -9,7 +11,7 @@ export class UserService {
     @InjectModel(User.name) private userModel: Model<User>
   ) { }
 
-  async createUser(user: User): Promise<User> {
+  async createUser(user: User) {
     const createdUser = new this.userModel(user);
     return createdUser.save();
   }
@@ -38,9 +40,23 @@ export class UserService {
       throw new NotFoundException('User not found!');
     }
 
-    return await this.userModel.findByIdAndUpdate(id, { username, password, profile }, {
+    if (username.length < 2) {
+      throw new BadRequestException('Username must have at least 2 characters.')
+    }
+
+    if (password.length < 6) {
+      throw new BadRequestException('Password must have at least 6 characters.');
+    }
+
+    const hashedPassword = await hash(password, 10);
+
+    return await this.userModel.findByIdAndUpdate(id, { username, password: hashedPassword, profile }, {
       new: true,
       runValidators: true,
     });
+  }
+
+  async findByEmail(email: string) {
+    return await this.userModel.findOne({ email: email }).select('+password').lean();
   }
 }

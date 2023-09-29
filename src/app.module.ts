@@ -9,9 +9,9 @@ import { AuthModule } from './auth/auth.module';
       envFilePath: '.env',
       isGlobal: true
     }),
-    MongooseModule.forRoot(process.env.MONGODB_URI, { dbName: 'focus-mate' }),
+    MongooseModule.forRoot(process.env.MONGODB_URI, { dbName: process.env.MONGODB_NAME }),
     UserModule,
     AuthModule,
-  ],
+  ]
 })
 export class AppModule { }

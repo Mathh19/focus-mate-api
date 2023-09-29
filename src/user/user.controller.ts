@@ -1,29 +1,43 @@
-import { Controller, Get, Param, Post, Patch, Delete, Body } from '@nestjs/common';
+import { Controller, Get, Param, Patch, Delete, Request, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { JwtService } from '@nestjs/jwt';
+import { UnauthorizedException } from '@nestjs/common';
 
 @Controller('user')
 export class UserController {
-  constructor(private usersService: UserService) { }
+  constructor(private usersService: UserService, private jwtService: JwtService) { }
 
   @Get(':id')
   async getUser(@Param('id') id: string) {
     return this.usersService.findUser(id);
   }
 
-  @Post()
-  async createUser(@Body() user: CreateUserDto) {
-    return this.usersService.createUser(user);
-  }
-
+  @UseGuards(AuthGuard)
   @Delete(':id')
-  async deleteUSer(@Param('id') id: string) {
+  async deleteUSer(@Param('id') id: string, @Request() req) {
+    const token = req.headers.authorization.split(' ')[1];
+
+    const { id: currentId } = this.jwtService.decode(token) as { id: string, iat: number, exp: number };
+
+    if (id !== currentId) {
+      throw new UnauthorizedException('Unable to delete account.');
+    }
+
     return this.usersService.deleteUser(id);
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
-  async updateUser(@Body() user: UpdateUserDto, @Param('id') id: string) {
-    return this.usersService.updateUser(id, user);
+  async updateUser(@Param('id') id: string, @Request() req) {
+    const token = req.headers.authorization.split(' ')[1];
+
+    const { id: currentId } = this.jwtService.decode(token) as { id: string, iat: number, exp: number };
+
+    if (id !== currentId) {
+      throw new UnauthorizedException('Unable to update account.');
+    }
+
+    return this.usersService.updateUser(id, req.body);
   }
 }
