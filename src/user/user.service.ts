@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { BadRequestException } from '@nestjs/common';
 import { hash } from 'bcrypt';
+import { HelperUser } from './shared/user.helpers';
 
 @Injectable()
 export class UserService {
@@ -32,8 +33,8 @@ export class UserService {
     return deletedUser;
   }
 
-  async updateUser(id: string, user: Omit<User, 'email'>) {
-    const { username, password, profile } = user;
+  async updateUser(id: string, user: Omit<User, 'email' | 'profile'>) {
+    const { username, password } = user;
     const hasUser = await this.userModel.findById(id);
 
     if (!hasUser) {
@@ -50,10 +51,30 @@ export class UserService {
 
     const hashedPassword = await hash(password, 10);
 
-    return await this.userModel.findByIdAndUpdate(id, { username, password: hashedPassword, profile }, {
+    return await this.userModel.findByIdAndUpdate(id, { username, password: hashedPassword }, {
       new: true,
       runValidators: true,
     });
+  }
+
+  async updateAvatar(id: string, file: string) {
+    const userAvatar = await this.userModel.findById(id);
+
+    if (userAvatar.profile === null || userAvatar.profile === '' || userAvatar.profile === undefined) {
+      await this.userModel.findByIdAndUpdate(id, {
+        profile: file,
+      });
+    } else {
+      await HelperUser.removeFile(userAvatar.profile);
+
+      await this.userModel.findByIdAndUpdate(id, {
+        profile: file,
+      });
+    }
+
+    const user = await this.userModel.findById(id);
+
+    return user;
   }
 
   async findByEmail(email: string) {
