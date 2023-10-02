@@ -17,4 +17,7 @@ export class RegisterDto {
 
   @IsString()
   readonly profile: string
+
+  @IsString()
+  readonly profile_url: string
 }

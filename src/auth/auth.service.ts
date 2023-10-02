@@ -14,7 +14,7 @@ export class AuthService {
   ) { }
 
   async register(registerDto: RegisterDto) {
-    const { username, email, password, profile } = registerDto;
+    const { username, email, password, profile, profile_url } = registerDto;
 
     if (username.length < 2) {
       throw new BadRequestException('Username must have at least 2 characters.')
@@ -30,7 +30,8 @@ export class AuthService {
       username,
       email,
       password: hashedPassword,
-      profile
+      profile,
+      profile_url
     });
 
     const token = this.jwtService.sign({ id: user._id });

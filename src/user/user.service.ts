@@ -57,18 +57,20 @@ export class UserService {
     });
   }
 
-  async updateAvatar(id: string, file: string) {
+  async updateAvatar(id: string, file: string, filename: string) {
     const userAvatar = await this.userModel.findById(id);
 
     if (userAvatar.profile === null || userAvatar.profile === '' || userAvatar.profile === undefined) {
       await this.userModel.findByIdAndUpdate(id, {
         profile: file,
+        profile_url: process.env.HOST + '/user/profile-image/' + filename
       });
     } else {
       await HelperUser.removeFile(userAvatar.profile);
 
       await this.userModel.findByIdAndUpdate(id, {
         profile: file,
+        profile_url: process.env.HOST + '/user/profile-image/' + filename
       });
     }
 

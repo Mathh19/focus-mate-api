@@ -1,4 +1,5 @@
-import { Controller, Get, Param, Patch, Delete, Request, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Param, Patch, Delete, Res, Request, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Response } from 'express';
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { JwtService } from '@nestjs/jwt';
@@ -49,13 +50,26 @@ export class UserController {
     storage: diskStorage({
       destination: './upload/avatar',
       filename: HelperUser.customFile,
-    })
+    }),
+    limits: {
+      fileSize: 1024 * 1024 * 5,
+    }
   }))
   async updateAvatar(
     @Param('id') id: string,
     @UploadedFile() file: Express.Multer.File
   ) {
 
-    return this.usersService.updateAvatar(id, file.path);
+    return this.usersService.updateAvatar(id, file.path, file.filename);
+  }
+
+  @Get('profile-image/:imagename')
+  async findProfileImage(
+    @Param('imagename') imagename: string,
+    @Res() res: Response
+  ) {
+    return res.sendFile(imagename, {
+      root: './upload/avatar'
+    });
   }
 }
