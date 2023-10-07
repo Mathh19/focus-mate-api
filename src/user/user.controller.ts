@@ -1,5 +1,5 @@
-import { Controller, Get, Param, Patch, Delete, Res, Request, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
-import { Response } from 'express';
+import { Controller, Get, Param, Patch, Delete, Res, Req, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Response, Request } from 'express';
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { JwtService } from '@nestjs/jwt';
@@ -19,7 +19,7 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  async deleteUSer(@Param('id') id: string, @Request() req) {
+  async deleteUSer(@Param('id') id: string, @Req() req: Request) {
     const token = req.headers.authorization.split(' ')[1];
 
     const { id: currentId } = this.jwtService.decode(token) as { id: string, iat: number, exp: number };
@@ -33,7 +33,7 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Patch(':id')
-  async updateUser(@Param('id') id: string, @Request() req) {
+  async updateUser(@Param('id') id: string, @Req() req: Request) {
     const token = req.headers.authorization.split(' ')[1];
 
     const { id: currentId } = this.jwtService.decode(token) as { id: string, iat: number, exp: number };
@@ -55,10 +55,20 @@ export class UserController {
       fileSize: 1024 * 1024 * 5,
     }
   }))
+
+  @UseGuards(AuthGuard)
   async updateAvatar(
+    @Req() req: Request,
     @Param('id') id: string,
     @UploadedFile() file: Express.Multer.File
   ) {
+    const token = req.headers.authorization.split(' ')[1];
+
+    const { id: currentId } = this.jwtService.decode(token) as { id: string, iat: number, exp: number };
+
+    if (id !== currentId) {
+      throw new UnauthorizedException('Unable to update avatar.');
+    }
 
     return this.usersService.updateAvatar(id, file.path, file.filename);
   }
