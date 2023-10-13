@@ -9,6 +9,9 @@ export class Task {
   name: string;
 
   @Prop()
+  description: string;
+
+  @Prop()
   days: string[];
 
   @Prop({ default: false })
