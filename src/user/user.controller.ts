@@ -1,12 +1,12 @@
-import { Controller, Get, Param, Patch, Delete, Res, Req, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Param, Patch, Delete, Res, Req, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { UserService } from './user.service';
-import { AuthGuard } from 'src/auth/auth.guard';
 import { JwtService } from '@nestjs/jwt';
 import { UnauthorizedException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { HelperUser } from './shared/user.helpers';
+import { NoAuth } from 'src/decorators/public.decorator';
 
 @Controller('user')
 export class UserController {
@@ -17,7 +17,6 @@ export class UserController {
     return this.usersService.findUser(id);
   }
 
-  @UseGuards(AuthGuard)
   @Delete(':id')
   async deleteUSer(@Param('id') id: string, @Req() req: Request) {
     const token = req.headers.authorization.split(' ')[1];
@@ -31,7 +30,6 @@ export class UserController {
     return this.usersService.deleteUser(id);
   }
 
-  @UseGuards(AuthGuard)
   @Patch(':id')
   async updateUser(@Param('id') id: string, @Req() req: Request) {
     const token = req.headers.authorization.split(' ')[1];
@@ -56,7 +54,6 @@ export class UserController {
     }
   }))
 
-  @UseGuards(AuthGuard)
   async updateAvatar(
     @Req() req: Request,
     @Param('id') id: string,
@@ -73,6 +70,7 @@ export class UserController {
     return this.usersService.updateAvatar(id, file.path, file.filename);
   }
 
+  @NoAuth()
   @Get('profile-image/:imagename')
   async findProfileImage(
     @Param('imagename') imagename: string,
