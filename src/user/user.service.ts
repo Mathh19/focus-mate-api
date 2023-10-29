@@ -5,11 +5,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { BadRequestException } from '@nestjs/common';
 import { hash } from 'bcrypt';
 import { HelperUser } from './shared/user.helpers';
+import { SettingService } from 'src/setting/setting.service';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<User>
+    @InjectModel(User.name) private userModel: Model<User>,
+    private settingService: SettingService
   ) { }
 
   async createUser(user: User) {
@@ -29,6 +31,7 @@ export class UserService {
 
   async deleteUser(id: string) {
     const deletedUser = await this.userModel.findById(id);
+    await this.settingService.remove(deletedUser.id);
     await this.userModel.findByIdAndDelete(id);
     return deletedUser;
   }

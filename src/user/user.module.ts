@@ -5,6 +5,7 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { SettingModule } from 'src/setting/setting.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ConfigService } from '@nestjs/config';
         }
       }
     }),
+    SettingModule,
   ],
   controllers: [UserController],
   providers: [UserService],

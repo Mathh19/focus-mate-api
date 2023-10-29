@@ -52,7 +52,7 @@ export class SettingService {
     return updatedSetting;
   }
 
-  async remove(id: number) {
-    return `This action removes a #${id} setting`;
+  async remove(userId: string) {
+    return await this.settingModel.deleteOne({ user: userId });
   }
 }
