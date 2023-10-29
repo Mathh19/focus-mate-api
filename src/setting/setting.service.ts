@@ -2,7 +2,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Setting } from './setting.schema';
 import { Model } from 'mongoose';
-import { isValidTheme } from './utils/isValidTheme';
 
 @Injectable()
 export class SettingService {
@@ -33,10 +32,6 @@ export class SettingService {
       theme,
       volume
     });
-
-    if (!isValidTheme(theme)) {
-      throw new BadRequestException('Invalid theme value.');
-    }
 
     if (pomodoroTime <= 0 || shortRestTime <= 0 || longRestTime <= 0 || cycles <= 0) {
       throw new BadRequestException('Your pomodoro contains invalid value.');
