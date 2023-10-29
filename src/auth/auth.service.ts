@@ -5,16 +5,24 @@ import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register-dts';
 import { LoginDto } from './dto/login.dto';
 import { UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { SettingService } from 'src/setting/setting.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private settingService: SettingService
   ) { }
 
   async register(registerDto: RegisterDto) {
     const { username, email, password, profile, profile_url } = registerDto;
+
+    const hasUser = await this.userService.findByEmail(email);
+
+    if (hasUser) {
+      throw new BadRequestException('This user already exists');
+    }
 
     if (username.length < 2) {
       throw new BadRequestException('Username must have at least 2 characters.')
@@ -33,6 +41,8 @@ export class AuthService {
       profile,
       profile_url
     });
+
+    await this.settingService.create(String(user._id));
 
     const token = this.jwtService.sign({ id: user._id });
 
