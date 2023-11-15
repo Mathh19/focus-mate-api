@@ -32,6 +32,9 @@ export class Setting {
   @Prop({ default: false })
   routineMode: boolean;
 
+  @Prop({ default: false })
+  vibrate: boolean;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   user: User;
 }
