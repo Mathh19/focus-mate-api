@@ -25,11 +25,4 @@ export class TaskController {
 
     return this.taskService.deleteById(id, userId);
   }
-
-  @Delete()
-  async deleteAllTasks(@Req() req) {
-    const { id: userId } = req.user;
-
-    return this.taskService.deleteAll(userId);
-  }
 }

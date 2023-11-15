@@ -11,8 +11,8 @@ export class Task {
   @Prop()
   description: string;
 
-  @Prop()
-  days: string[];
+  @Prop({ default: undefined })
+  day?: string;
 
   @Prop({ default: false })
   finished: boolean;

@@ -8,8 +8,7 @@ import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Task.name, schema: TaskSchema },
-    ]),
+    MongooseModule.forFeature([{ name: Task.name, schema: TaskSchema }]),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {

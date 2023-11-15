@@ -15,7 +15,7 @@ export class TaskService {
   }
 
   async update(id: string, task: Task, userId: string) {
-    const { name, days, description, finished, inFocus, user } = task;
+    const { name, day, description, finished, inFocus, user } = task;
     const updatedTask = await this.taskModel.findById(id);
 
     if (!updatedTask) {
@@ -28,7 +28,7 @@ export class TaskService {
 
     return await this.taskModel.findByIdAndUpdate(id, {
       name,
-      days,
+      day,
       description,
       finished,
       inFocus
@@ -49,14 +49,5 @@ export class TaskService {
     await this.taskModel.findByIdAndDelete(id);
 
     return deletedTask;
-  }
-
-  async deleteAll(userId: string, deleteFinished?: boolean) {
-
-    if (deleteFinished) {
-      return await this.taskModel.deleteMany({ user: userId, finished: true });
-    }
-
-    return await this.taskModel.deleteMany({ user: userId });
   }
 }
