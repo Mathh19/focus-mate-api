@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { Model } from 'mongoose';
 import { Task } from './task.schema';
 import { InjectModel } from '@nestjs/mongoose';
+import { getCurrentDayOfWeek } from './utils/getCurrentDay';
 
 @Injectable()
 export class TaskService {
@@ -49,5 +50,23 @@ export class TaskService {
     await this.taskModel.findByIdAndDelete(id);
 
     return deletedTask;
+  }
+
+  async deleteTasks(hasDay: boolean, finished: boolean, userId: string) {
+    const currentDay = getCurrentDayOfWeek();
+
+    if (hasDay && !finished) {
+      return await this.taskModel.deleteMany({ user: userId, day: currentDay, finished: false })
+    }
+
+    if (hasDay && finished) {
+      return await this.taskModel.deleteMany({ user: userId, finished: true, day: currentDay });
+    }
+
+    if (!hasDay && finished) {
+      return await this.taskModel.deleteMany({ user: userId, finished: true, day: undefined });
+    }
+
+    return await this.taskModel.deleteMany({ user: userId, day: undefined, finished: false });
   }
 }
