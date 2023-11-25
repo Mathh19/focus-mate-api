@@ -1,4 +1,4 @@
-import { Body, Controller, Patch, Post, Req, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Patch, Post, Req, Param, Delete, Query } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { Task } from './task.schema';
 
@@ -24,5 +24,12 @@ export class TaskController {
     const { id: userId } = req.user;
 
     return this.taskService.deleteById(id, userId);
+  }
+
+  @Delete()
+  async deleteTasks(@Req() req, @Query('hasDay') hasDay: boolean, @Query('finished') finished: boolean) {
+    const { id } = req.user;
+
+    return await this.taskService.deleteTasks(hasDay, finished, id)
   }
 }
