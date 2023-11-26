@@ -1,10 +1,16 @@
-import { Body, Controller, Patch, Post, Req, Param, Delete, Query } from '@nestjs/common';
+import { Body, Controller, Patch, Post, Req, Param, Delete, Query, Get } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { Task } from './task.schema';
 
 @Controller('task')
 export class TaskController {
   constructor(private readonly taskService: TaskService) { }
+
+  @Get()
+  async findAllTasks(@Req() req) {
+    const { id } = req.user;
+    return this.taskService.find(id);
+  }
 
   @Post()
   async createTask(@Req() req, @Body() task: Task) {

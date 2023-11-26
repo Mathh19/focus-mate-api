@@ -11,6 +11,10 @@ export class TaskService {
     private readonly taskModel: Model<Task>
   ) { }
 
+  async find(userId: string) {
+    return await this.taskModel.find({ user: userId });
+  }
+
   async create(task: Task, userId: string) {
     return this.taskModel.create({ ...task, user: userId });
   }
