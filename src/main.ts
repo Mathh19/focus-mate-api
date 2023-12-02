@@ -6,6 +6,11 @@ import { urlencoded, json } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.enableCors({
+    origin: 'https://focusmate.vercel.app',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    optionsSuccessStatus: 204
+  });
   await app.listen(8000);
   app.useStaticAssets(join(__dirname, '..', 'upload', 'avatar'));
   app.use(json({ limit: '200mb' }));
