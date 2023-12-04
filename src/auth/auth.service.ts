@@ -4,7 +4,7 @@ import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register-dts';
 import { LoginDto } from './dto/login.dto';
-import { UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { SettingService } from 'src/setting/setting.service';
 
 @Injectable()
@@ -55,13 +55,13 @@ export class AuthService {
     const user = await this.userService.findByEmail(email);
 
     if (!user) {
-      throw new UnauthorizedException('Invalid email or password');
+      throw new BadRequestException('Invalid email or password');
     }
 
     const isPasswordMerge = await compare(password, user.password);
 
     if (!isPasswordMerge) {
-      throw new UnauthorizedException('Invalid email or password');
+      throw new BadRequestException('Invalid email or password');
     }
 
     const token = this.jwtService.sign({ id: user._id });
