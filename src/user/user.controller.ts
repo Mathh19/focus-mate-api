@@ -12,8 +12,9 @@ import { NoAuth } from 'src/decorators/public.decorator';
 export class UserController {
   constructor(private usersService: UserService, private jwtService: JwtService) { }
 
-  @Get(':id')
-  async getUser(@Param('id') id: string) {
+  @Get()
+  async getUser(@Req() req) {
+    const { id } = req.user;
     return this.usersService.findUser(id);
   }
 
