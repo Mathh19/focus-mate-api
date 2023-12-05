@@ -1,8 +1,7 @@
 import { Controller, Get, Param, Patch, Delete, Res, Req, UseInterceptors, UploadedFile } from '@nestjs/common';
-import { Response, Request } from 'express';
+import { Response } from 'express';
 import { UserService } from './user.service';
 import { JwtService } from '@nestjs/jwt';
-import { UnauthorizedException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { HelperUser } from './shared/user.helpers';
@@ -18,33 +17,21 @@ export class UserController {
     return this.usersService.findUser(id);
   }
 
-  @Delete(':id')
-  async deleteUSer(@Param('id') id: string, @Req() req: Request) {
-    const token = req.headers.authorization.split(' ')[1];
-
-    const { id: currentId } = this.jwtService.decode(token) as { id: string, iat: number, exp: number };
-
-    if (id !== currentId) {
-      throw new UnauthorizedException('Unable to delete account.');
-    }
+  @Delete()
+  async deleteUSer(@Req() req) {
+    const { id } = req.user;
 
     return this.usersService.deleteUser(id);
   }
 
-  @Patch(':id')
-  async updateUser(@Param('id') id: string, @Req() req: Request) {
-    const token = req.headers.authorization.split(' ')[1];
-
-    const { id: currentId } = this.jwtService.decode(token) as { id: string, iat: number, exp: number };
-
-    if (id !== currentId) {
-      throw new UnauthorizedException('Unable to update account.');
-    }
+  @Patch()
+  async updateUser(@Req() req) {
+    const { id } = req.user;
 
     return this.usersService.updateUser(id, req.body);
   }
 
-  @Patch(':id/avatar')
+  @Patch('/avatar')
   @UseInterceptors(FileInterceptor('avatar', {
     storage: diskStorage({
       destination: './upload/avatar',
@@ -56,17 +43,11 @@ export class UserController {
   }))
 
   async updateAvatar(
-    @Req() req: Request,
-    @Param('id') id: string,
+    @Req() req,
     @UploadedFile() file: Express.Multer.File
   ) {
-    const token = req.headers.authorization.split(' ')[1];
+    const { id } = req.user;
 
-    const { id: currentId } = this.jwtService.decode(token) as { id: string, iat: number, exp: number };
-
-    if (id !== currentId) {
-      throw new UnauthorizedException('Unable to update avatar.');
-    }
 
     return this.usersService.updateAvatar(id, file.path, file.filename);
   }
