@@ -1,6 +1,7 @@
-import { Body, Controller, Patch, Post, Req, Param, Delete, Query, Get } from '@nestjs/common';
+import { Body, Controller, Patch, Post, Req, Param, Delete, Query, Get, UseInterceptors } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { Task } from './task.schema';
+import { RemoveIdInterceptor } from './remove-id.interceptor';
 
 @Controller('task')
 export class TaskController {
@@ -13,6 +14,7 @@ export class TaskController {
   }
 
   @Post()
+  @UseInterceptors(RemoveIdInterceptor)
   async createTask(@Req() req, @Body() task: Task) {
     const { id } = req.user
     return this.taskService.create(task, id);
