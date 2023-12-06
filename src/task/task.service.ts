@@ -4,6 +4,8 @@ import { Task } from './task.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { getCurrentDayOfWeek } from './utils/getCurrentDay';
 
+const currentDay = getCurrentDayOfWeek();
+
 @Injectable()
 export class TaskService {
   constructor(
@@ -40,6 +42,21 @@ export class TaskService {
     });
   }
 
+  async finishAllTasks(hasDay: boolean, task: Task, userId: string) {
+    const { finished } = task;
+
+    if (hasDay) {
+      return await this.taskModel.updateMany({
+        user: userId,
+        day: currentDay
+      }, { $set: { finished: finished } });
+    }
+
+    return await this.taskModel.updateMany({
+      user: userId,
+    }, { $set: { finished: finished } });
+  }
+
   async deleteById(id: string, userId: string) {
     const deletedTask = await this.taskModel.findById(id);
 
@@ -57,8 +74,6 @@ export class TaskService {
   }
 
   async deleteTasks(hasDay: boolean, finished: boolean, userId: string) {
-    const currentDay = getCurrentDayOfWeek();
-
     if (hasDay && !finished) {
       return await this.taskModel.deleteMany({ user: userId, day: currentDay, finished: false })
     }

@@ -27,6 +27,13 @@ export class TaskController {
     return this.taskService.update(id, task, userId);
   }
 
+  @Patch()
+  async finishAllTask(@Req() req, @Query('hasDay') hasDay: boolean, @Body() task: Task) {
+    const { id: userId } = req.user;
+
+    return this.taskService.finishAllTasks(hasDay, task, userId);
+  }
+
   @Delete(':id')
   async deleteTaskById(@Req() req, @Param('id') id: string) {
     const { id: userId } = req.user;
