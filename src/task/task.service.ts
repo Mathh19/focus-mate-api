@@ -42,19 +42,17 @@ export class TaskService {
     });
   }
 
-  async finishAllTasks(hasDay: boolean, task: Task, userId: string) {
-    const { finished } = task;
-
+  async finishAllTasks(userId: string, hasDay?: boolean) {
     if (hasDay) {
       return await this.taskModel.updateMany({
         user: userId,
         day: currentDay
-      }, { $set: { finished: finished } });
+      }, { $set: { finished: true } });
     }
 
     return await this.taskModel.updateMany({
       user: userId,
-    }, { $set: { finished: finished } });
+    }, { $set: { finished: true } });
   }
 
   async deleteById(id: string, userId: string) {

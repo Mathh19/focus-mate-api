@@ -28,10 +28,10 @@ export class TaskController {
   }
 
   @Patch()
-  async finishAllTask(@Req() req, @Query('hasDay') hasDay: boolean, @Body() task: Task) {
+  async finishAllTask(@Req() req, @Query('hasDay') hasDay?: boolean,) {
     const { id: userId } = req.user;
 
-    return this.taskService.finishAllTasks(hasDay, task, userId);
+    return this.taskService.finishAllTasks(userId, hasDay);
   }
 
   @Delete(':id')
