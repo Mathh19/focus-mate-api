@@ -22,7 +22,7 @@ export class TaskService {
   }
 
   async update(id: string, task: Task, userId: string) {
-    const { name, day, description, finished, inFocus, user } = task;
+    const { name, day, description, finished, user } = task;
     const updatedTask = await this.taskModel.findById(id);
 
     if (!updatedTask) {
@@ -38,7 +38,6 @@ export class TaskService {
       day,
       description,
       finished,
-      inFocus
     });
   }
 
@@ -54,6 +53,15 @@ export class TaskService {
       user: userId,
       day: undefined,
     }, { $set: { finished: true } });
+  }
+
+  async setFocusTask(id: string, taskId: string) {
+    const tasks = await this.taskModel.find({ user: id });
+    tasks.map(async (task) => {
+      task.id === taskId ? await this.taskModel.findByIdAndUpdate(taskId, { inFocus: true })
+        : await this.taskModel.updateMany({ user: id, _id: { $ne: taskId } }, { $set: { inFocus: false } })
+    })
+    return;
   }
 
   async deleteById(id: string, userId: string) {

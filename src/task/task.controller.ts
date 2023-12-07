@@ -13,6 +13,12 @@ export class TaskController {
     return this.taskService.find(id);
   }
 
+  @Patch(':id')
+  async setFocusTask(@Req() req, @Param('id') taskId: string) {
+    const { id } = req.user;
+    return this.taskService.setFocusTask(id, taskId);
+  }
+
   @Post()
   @UseInterceptors(RemoveIdInterceptor)
   async createTask(@Req() req, @Body() task: Task) {
