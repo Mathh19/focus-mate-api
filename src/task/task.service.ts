@@ -52,6 +52,7 @@ export class TaskService {
 
     return await this.taskModel.updateMany({
       user: userId,
+      day: undefined,
     }, { $set: { finished: true } });
   }
 
