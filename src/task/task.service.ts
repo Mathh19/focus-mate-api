@@ -73,8 +73,9 @@ export class TaskService {
   }
 
   async deleteTasks(hasDay: boolean, finished: boolean, userId: string) {
+
     if (hasDay && !finished) {
-      return await this.taskModel.deleteMany({ user: userId, day: currentDay, finished: false })
+      return await this.taskModel.deleteMany({ user: userId, day: currentDay })
     }
 
     if (hasDay && finished) {
@@ -85,6 +86,6 @@ export class TaskService {
       return await this.taskModel.deleteMany({ user: userId, finished: true, day: undefined });
     }
 
-    return await this.taskModel.deleteMany({ user: userId, day: undefined, finished: false });
+    return await this.taskModel.deleteMany({ user: userId, day: undefined });
   }
 }
