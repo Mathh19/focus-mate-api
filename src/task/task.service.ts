@@ -42,7 +42,7 @@ export class TaskService {
     });
   }
 
-  async finishAllTasks(userId: string, hasDay?: boolean) {
+  async finishAllTasks(userId: string, hasDay: boolean) {
     if (hasDay) {
       return await this.taskModel.updateMany({
         user: userId,
