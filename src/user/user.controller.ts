@@ -48,7 +48,6 @@ export class UserController {
   ) {
     const { id } = req.user;
 
-
     return this.usersService.updateAvatar(id, file.path, file.filename);
   }
 

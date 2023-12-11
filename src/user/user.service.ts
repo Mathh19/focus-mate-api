@@ -61,7 +61,7 @@ export class UserService {
   }
 
   async updateAvatar(id: string, file: string, filename: string) {
-    const userAvatar = await this.userModel.findById(id);
+    const userAvatar = await this.userModel.findById({ _id: id });
 
     if (userAvatar.profile === null || userAvatar.profile === '' || userAvatar.profile === undefined) {
       await this.userModel.findByIdAndUpdate(id, {
@@ -77,7 +77,7 @@ export class UserService {
       });
     }
 
-    const user = await this.userModel.findById(id);
+    const user = await this.userModel.findById({ _id: id });
 
     return user;
   }
