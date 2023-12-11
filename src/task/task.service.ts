@@ -22,23 +22,24 @@ export class TaskService {
   }
 
   async update(id: string, task: Task, userId: string) {
-    const { name, day, description, finished, user } = task;
+    const { name, day, description, finished } = task;
     const updatedTask = await this.taskModel.findById(id);
 
     if (!updatedTask) {
       throw new NotFoundException('Not found task.');
     }
 
-    if (user.toString() !== userId) {
-      throw new UnauthorizedException();
-    }
-
-    return await this.taskModel.findByIdAndUpdate(id, {
+    const taskUpdated = await this.taskModel.findByIdAndUpdate(id, {
       name,
       day,
       description,
       finished,
+      user: userId
     });
+
+    const currentTask = await this.taskModel.findById(taskUpdated._id)
+
+    return currentTask;
   }
 
   async finishAllTasks(userId: string, hasDay: boolean) {

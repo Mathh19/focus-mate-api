@@ -1,4 +1,4 @@
-import { Body, Controller, Patch, Post, Req, Param, Delete, Query, Get, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Patch, Post, Req, Param, Delete, Query, Get, UseInterceptors, Put } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { Task } from './task.schema';
 import { RemoveIdInterceptor } from './remove-id.interceptor';
@@ -13,7 +13,7 @@ export class TaskController {
     return this.taskService.find(id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   async setFocusTask(@Req() req, @Param('id') taskId: string) {
     const { id } = req.user;
     return this.taskService.setFocusTask(id, taskId);
