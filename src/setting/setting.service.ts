@@ -15,7 +15,7 @@ export class SettingService {
   }
 
   async findSetting(userId: string) {
-    return await this.settingModel.findOne({ user: userId });
+    return await this.settingModel.find({ user: userId });
   }
 
   async update(userId: string, setting: Setting) {
