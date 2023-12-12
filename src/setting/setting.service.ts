@@ -30,21 +30,14 @@ export class SettingService {
       notification,
       routineMode,
       theme,
-      volume
+      volume: volume
     });
 
-    if (pomodoroTime <= 0 || shortRestTime <= 0 || longRestTime <= 0 || cycles <= 0) {
+    if (pomodoroTime < 0 || shortRestTime < 0 || longRestTime < 0 || cycles < 0) {
       throw new BadRequestException('Your pomodoro contains invalid value.');
     }
 
-    if (pomodoroTime && !Number.isInteger(pomodoroTime)
-      || shortRestTime && !Number.isInteger(shortRestTime)
-      || longRestTime && !Number.isInteger(longRestTime)
-      || cycles && !Number.isInteger(cycles)) {
-      throw new BadRequestException('Your pomodoro contains invalid value.');
-    }
-
-    if (volume < 0 || volume > 100 || !Number.isInteger(volume)) {
+    if (volume < 0 || volume > 100) {
       throw new BadRequestException('Invalid volume value.');
     }
 
