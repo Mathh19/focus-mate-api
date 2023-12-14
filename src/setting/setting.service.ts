@@ -30,7 +30,7 @@ export class SettingService {
       notification,
       routineMode,
       theme,
-      volume: volume ? volume[0] : volume
+      volume
     });
 
     if (pomodoroTime < 0 || shortRestTime < 0 || longRestTime < 0 || cycles < 0) {
