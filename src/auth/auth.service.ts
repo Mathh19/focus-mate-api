@@ -24,12 +24,12 @@ export class AuthService {
       throw new BadRequestException('This user already exists');
     }
 
-    if (username.length < 2) {
-      throw new BadRequestException('Username must have at least 2 characters.')
+    if (username.length < 2 || username.length > 25) {
+      throw new BadRequestException('username must have between 2 and 25 characters.')
     }
 
-    if (password.length < 6) {
-      throw new BadRequestException('Password must have at least 6 characters.');
+    if (password.length < 8) {
+      throw new BadRequestException('Your password must be at least 8 characters.');
     }
 
     const hashedPassword = await hash(password, 10);
