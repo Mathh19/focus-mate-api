@@ -7,8 +7,9 @@ import { urlencoded, json } from 'express';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors({
-    origin: 'https://focusmate.vercel.app',
+    origin: process.env.URL_ORIGIN_CORS,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
     optionsSuccessStatus: 204
   });
   await app.listen(8000);
