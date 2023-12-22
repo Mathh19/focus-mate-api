@@ -16,10 +16,7 @@ export class User {
   password: string;
 
   @Prop()
-  profile: string;
-
-  @Prop()
-  profile_url: string;
+  avatar: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

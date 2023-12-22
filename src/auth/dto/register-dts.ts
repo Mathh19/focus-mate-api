@@ -16,8 +16,5 @@ export class RegisterDto {
   readonly password: string;
 
   @IsString()
-  readonly profile: string
-
-  @IsString()
-  readonly profile_url: string
+  readonly avatar: string
 }

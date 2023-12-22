@@ -16,7 +16,7 @@ export class AuthService {
   ) { }
 
   async register(registerDto: RegisterDto) {
-    const { username, email, password, profile, profile_url } = registerDto;
+    const { username, email, password, avatar } = registerDto;
 
     const hasUser = await this.userService.findByEmail(email);
 
@@ -38,8 +38,7 @@ export class AuthService {
       username,
       email,
       password: hashedPassword,
-      profile,
-      profile_url
+      avatar
     });
 
     await this.settingService.create(String(user._id));

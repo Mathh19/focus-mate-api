@@ -4,8 +4,8 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { BadRequestException } from '@nestjs/common';
 import { hash } from 'bcrypt';
-import { HelperUser } from './shared/user.helpers';
 import { SettingService } from 'src/setting/setting.service';
+import { HelperUser } from './shared/user.helpers';
 
 @Injectable()
 export class UserService {
@@ -36,50 +36,53 @@ export class UserService {
     return deletedUser;
   }
 
-  async updateUser(id: string, user: Omit<User, 'email' | 'profile'>) {
-    const { username, password } = user;
+  async updateUser(id: string, user: User) {
+    delete user.email
+    delete user.avatar
     const hasUser = await this.userModel.findById(id);
 
     if (!hasUser) {
       throw new NotFoundException('User not found!');
     }
 
-    if (username.length < 2) {
+    if (user.username.length < 2) {
       throw new BadRequestException('Username must have at least 2 characters.')
     }
 
-    if (password.length < 6) {
+    if (user.password.length < 6) {
       throw new BadRequestException('Password must have at least 6 characters.');
     }
 
-    const hashedPassword = await hash(password, 10);
+    const hashedPassword = await hash(user.password, 10);
 
-    return await this.userModel.findByIdAndUpdate(id, { username, password: hashedPassword }, {
+    return await this.userModel.findByIdAndUpdate(id, { ...user, password: hashedPassword }, {
       new: true,
       runValidators: true,
     });
   }
 
-  async updateAvatar(id: string, file: string, filename: string) {
-    const userAvatar = await this.userModel.findById({ _id: id });
+  async updateAvatar(id: string, user: User) {
+    delete user.username
+    delete user.email
+    delete user.password
 
-    if (userAvatar.profile === null || userAvatar.profile === '' || userAvatar.profile === undefined) {
-      await this.userModel.findByIdAndUpdate(id, {
-        profile: file,
-        profile_url: process.env.HOST + '/user/profile-image/' + filename
-      });
+    const currentUser = await this.userModel.findById(id);
+
+    if (currentUser.avatar === null || currentUser.avatar === '' || currentUser.avatar === undefined) {
+      return await this.userModel.findByIdAndUpdate(id, {
+        avatar: user.avatar,
+      }, { new: true });
     } else {
-      await HelperUser.removeFile(userAvatar.profile);
+      HelperUser.removeFile(currentUser.avatar);
 
-      await this.userModel.findByIdAndUpdate(id, {
-        profile: file,
-        profile_url: process.env.HOST + '/user/profile-image/' + filename
-      });
+      return await this.userModel.findByIdAndUpdate(id, {
+        avatar: user.avatar,
+      }, { new: true });
     }
+  }
 
-    const user = await this.userModel.findById({ _id: id });
-
-    return user;
+  async removeAvatar(userId: string) {
+    return this.userModel.findByIdAndUpdate(userId, { avatar: null }, { new: true });
   }
 
   async findByEmail(email: string) {

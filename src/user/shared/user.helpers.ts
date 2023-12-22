@@ -1,10 +1,6 @@
 import { Request } from 'express';
-import { unlink } from 'fs';
+import { existsSync, unlinkSync } from 'fs';
 import { extname } from 'path';
-import { promisify } from 'util';
-
-const unlinkAsync = promisify(unlink);
-
 export class HelperUser {
   static customFile(req: Request, file: Express.Multer.File, cb: any) {
     const randomName = Array(32)
@@ -12,16 +8,15 @@ export class HelperUser {
       .map(() => Math.round(Math.random() * 16).toString(16))
       .join('');
 
-    const nameFile = cb(null, `${randomName}${extname(file.originalname)}`);
+    const fileName = cb(null, `${randomName}${extname(file.originalname)}`);
 
-    return nameFile;
+    return fileName;
   }
 
-  static async removeFile(file: string) {
-    try {
-      await unlinkAsync(file);
-    } catch (error) {
-      throw new Error('File not exist.');
+  static removeFile(file: string) {
+    if (existsSync(`./upload/avatar/${file}`)) {
+      return unlinkSync(`./upload/avatar/${file}`);
     }
+    throw new Error('File does not exist.');
   }
 }
