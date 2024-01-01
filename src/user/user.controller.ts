@@ -45,6 +45,8 @@ export class UserController {
   @Post('/avatar')
   @UseInterceptors(FileInterceptor('file', storage))
   uploadFile(@UploadedFile() file: Express.Multer.File, @Req() req) {
+    HelperUser.validateFile(file);
+
     return this.userService.updateAvatar(req.user.id, {
       ...req.user,
       avatar: file.filename
