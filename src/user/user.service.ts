@@ -45,17 +45,22 @@ export class UserService {
       throw new NotFoundException('User not found!');
     }
 
-    if (user.username.length < 2) {
+    if (user.username && user.username.length < 2) {
       throw new BadRequestException('Username must have at least 2 characters.')
     }
 
-    if (user.password.length < 6) {
+    if (user.avatar && user.password.length < 6) {
       throw new BadRequestException('Password must have at least 6 characters.');
     }
 
-    const hashedPassword = await hash(user.password, 10);
+    const hashedPassword = user.password ? await hash(user.password, 10) : undefined;
 
-    return await this.userModel.findByIdAndUpdate(id, { ...user, password: hashedPassword }, {
+    const updateFields: Partial<User> = {
+      ...(user.username && { username: user.username }),
+      ...(hashedPassword && { password: hashedPassword }),
+    };
+
+    return await this.userModel.findByIdAndUpdate(id, updateFields, {
       new: true,
       runValidators: true,
     });
