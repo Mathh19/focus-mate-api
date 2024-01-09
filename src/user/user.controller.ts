@@ -7,6 +7,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { HelperUser } from './shared/user.helpers';
 import { join } from 'path';
+import { existsSync } from 'fs';
 
 const storage = {
   storage: diskStorage({
@@ -64,6 +65,12 @@ export class UserController {
     @Param('imagename') imagename: string,
     @Res() res: Response
   ) {
-    return res.sendFile((join(process.cwd(), './upload/avatar/' + imagename)))
+    const filePath = join(process.cwd(), './upload/avatar/', imagename);
+
+    if (existsSync(filePath)) {
+      return res.sendFile(filePath);
+    } else {
+      return res.status(404).send('File not found');
+    }
   }
 }
