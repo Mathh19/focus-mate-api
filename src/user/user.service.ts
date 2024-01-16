@@ -6,6 +6,7 @@ import { BadRequestException } from '@nestjs/common';
 import { hash } from 'bcrypt';
 import { SettingService } from 'src/setting/setting.service';
 import { HelperUser } from './shared/user.helpers';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UserService {
@@ -14,7 +15,7 @@ export class UserService {
     private settingService: SettingService
   ) { }
 
-  async createUser(user: User) {
+  async createUser(user: CreateUserDto) {
     const createdUser = new this.userModel(user);
     return createdUser.save();
   }
