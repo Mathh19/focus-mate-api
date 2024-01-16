@@ -4,7 +4,6 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { NoAuth } from 'src/decorators/public.decorator';
 import { LoginGoogleDto } from './dto/login-google.dto';
-import { RegisterGoogleDto } from './dto/register-google.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -26,11 +25,5 @@ export class AuthController {
   @Post('google/login')
   loginGoogle(@Body() loginGoogleDto: LoginGoogleDto) {
     return this.authService.loginGoogle(loginGoogleDto);
-  }
-
-  @NoAuth()
-  @Post('google/register')
-  registerGoogle(@Body() registerGoogleDto: RegisterGoogleDto) {
-    return this.authService.registerGoogle(registerGoogleDto);
   }
 }
