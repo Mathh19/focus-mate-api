@@ -5,7 +5,7 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 export class PingService {
   private readonly logger = new Logger(PingService.name);
 
-  @Cron(CronExpression.EVERY_10_MINUTES)
+  @Cron(CronExpression.EVERY_5_MINUTES)
   handleCron() {
     this.logger.log('Ping server.');
   }
