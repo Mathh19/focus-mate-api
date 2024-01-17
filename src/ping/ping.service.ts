@@ -7,6 +7,6 @@ export class PingService {
 
   @Cron(CronExpression.EVERY_10_MINUTES)
   handleCron() {
-    this.logger.debug('Ping server.');
+    this.logger.log('Ping server.');
   }
 }
