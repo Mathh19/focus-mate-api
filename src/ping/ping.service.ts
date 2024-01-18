@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { get } from 'http';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const https = require('https');
 
 @Injectable()
 export class PingService {
@@ -11,7 +12,7 @@ export class PingService {
     this.logger.debug('Ping server.');
     const url = process.env.HOST;
     return new Promise((resolve, reject) => {
-      const req = get(url, (res) => {
+      const req = https.get(url, (res) => {
         if (res.statusCode === 200) {
           resolve({
             statusCode: 200,
