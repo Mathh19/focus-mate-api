@@ -17,14 +17,14 @@ import { PingModule } from './ping/ping.module';
       isGlobal: true
     }),
     MulterModule.register({
-      dest: './upload',
+      dest: './upload/avatar',
     }),
     MongooseModule.forRoot(process.env.MONGODB_URI, { dbName: process.env.MONGODB_NAME }),
     UserModule,
     AuthModule,
     TaskModule,
     SettingModule,
-    PingModule
-  ]
+    PingModule,
+  ],
 })
 export class AppModule { }
