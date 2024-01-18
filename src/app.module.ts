@@ -8,6 +8,7 @@ import { SettingModule } from './setting/setting.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { ScheduleModule } from '@nestjs/schedule';
 import { PingModule } from './ping/ping.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -26,5 +27,6 @@ import { PingModule } from './ping/ping.module';
     SettingModule,
     PingModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule { }
