@@ -6,6 +6,7 @@ import { UserService } from './user.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { SettingModule } from 'src/setting/setting.module';
+import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { SettingModule } from 'src/setting/setting.module';
       }
     }),
     SettingModule,
+    CloudinaryModule
   ],
   controllers: [UserController],
   providers: [UserService],

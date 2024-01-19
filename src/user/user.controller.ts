@@ -8,6 +8,7 @@ import { diskStorage } from 'multer';
 import { HelperUser } from './shared/user.helpers';
 import { join } from 'path';
 import { existsSync } from 'fs';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 const storage = {
   storage: diskStorage({
@@ -21,7 +22,7 @@ const storage = {
 
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService, private jwtService: JwtService) { }
+  constructor(private userService: UserService, private jwtService: JwtService, private cloudinaryService: CloudinaryService) { }
 
   @Get()
   async getUser(@Req() req) {
@@ -45,12 +46,14 @@ export class UserController {
 
   @Post('/avatar')
   @UseInterceptors(FileInterceptor('file', storage))
-  uploadFile(@UploadedFile() file: Express.Multer.File, @Req() req) {
+  async uploadFile(@UploadedFile() file: Express.Multer.File, @Req() req) {
     HelperUser.validateFile(file);
+    const avatar_url = await this.cloudinaryService.uploadFile(file);
 
     return this.userService.updateAvatar(req.user.id, {
       ...req.user,
-      avatar: file.filename
+      avatar: file.filename,
+      avatar_url: avatar_url
     });
   }
 

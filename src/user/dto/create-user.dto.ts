@@ -16,8 +16,11 @@ export class CreateUserDto {
   @Length(8)
   password?: string;
 
-  @ApiProperty({ example: 'avatar', description: 'Avatar of the user' })
   @IsOptional()
   @IsString()
   avatar?: string;
+
+  @IsOptional()
+  @IsString()
+  avatar_url?: string;
 }

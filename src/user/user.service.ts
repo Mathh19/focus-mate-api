@@ -7,12 +7,14 @@ import { hash } from 'bcrypt';
 import { SettingService } from 'src/setting/setting.service';
 import { HelperUser } from './shared/user.helpers';
 import { CreateUserDto } from './dto/create-user.dto';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
-    private settingService: SettingService
+    private settingService: SettingService,
+    private cloudinaryService: CloudinaryService
   ) { }
 
   async createUser(user: CreateUserDto) {
@@ -77,14 +79,15 @@ export class UserService {
     if (currentUser.avatar === null || currentUser.avatar === '' || currentUser.avatar === undefined) {
       return await this.userModel.findByIdAndUpdate(id, {
         avatar: user.avatar,
-      }, { new: true });
-    } else {
-      HelperUser.removeFile(currentUser.avatar);
-
-      return await this.userModel.findByIdAndUpdate(id, {
-        avatar: user.avatar,
+        avatar_url: user.avatar_url
       }, { new: true });
     }
+    HelperUser.removeFile(currentUser.avatar);
+
+    return await this.userModel.findByIdAndUpdate(id, {
+      avatar: user.avatar,
+      avatar_url: user.avatar_url
+    }, { new: true });
   }
 
   async removeAvatar(userId: string) {

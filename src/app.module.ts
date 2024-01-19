@@ -8,6 +8,7 @@ import { SettingModule } from './setting/setting.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { ScheduleModule } from '@nestjs/schedule';
 import { PingModule } from './ping/ping.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { AppController } from './app.controller';
 
 @Module({
@@ -26,6 +27,7 @@ import { AppController } from './app.controller';
     TaskModule,
     SettingModule,
     PingModule,
+    CloudinaryModule
   ],
   controllers: [AppController],
 })
