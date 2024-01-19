@@ -91,7 +91,7 @@ export class UserService {
   }
 
   async removeAvatar(userId: string) {
-    return this.userModel.findByIdAndUpdate(userId, { avatar: null }, { new: true });
+    return this.userModel.findByIdAndUpdate(userId, { avatar: null, avatar_url: null }, { new: true });
   }
 
   async findByEmail(email: string) {
