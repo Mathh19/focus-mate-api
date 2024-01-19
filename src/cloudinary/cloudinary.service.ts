@@ -6,7 +6,8 @@ export class CloudinaryService {
   async uploadFile(file: Express.Multer.File) {
     const filePath = `./upload/avatar/${file.filename}`;
     const options = {
-      resource_type: 'image', folder: 'pomodoro',
+      resource_type: 'image',
+      folder: process.env.CLOUDINARY_API_FOLDER_NAME,
       use_filename: true,
       unique_filename: false,
       overwrite: true,
