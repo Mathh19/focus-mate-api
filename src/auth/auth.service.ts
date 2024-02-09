@@ -58,6 +58,10 @@ export class AuthService {
 
     const user = await this.userService.findByEmail(email);
 
+    if (user && user.email && !user.password) {
+      throw new BadRequestException('Your account is registered with your Google account.');
+    };
+
     if (!user) {
       throw new BadRequestException('Invalid email or password');
     }
@@ -74,7 +78,6 @@ export class AuthService {
   }
 
   async loginGoogle(loginGoogleDto: LoginGoogleDto) {
-
     const { avatar, username, email } = loginGoogleDto;
 
     const hasUser = await this.userService.findByEmail(email);
