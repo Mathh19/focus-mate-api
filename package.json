@@ -27,7 +27,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/mongoose": "^10.0.1",
     "@nestjs/passport": "^10.0.3",
-    "@nestjs/platform-express": "^10.3.9",
+    "@nestjs/platform-express": "^10.4.4",
     "@nestjs/schedule": "^4.0.0",
     "@nestjs/swagger": "^7.1.14",
     "bcrypt": "^5.1.1",
